@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "types": ["node"],
+    "lib": [
+      "es2017"
+    ]
+  }
+}

@@ -1,0 +1,118 @@
+service:
+  name: maanaim-guarapari-files-api
+
+plugins:
+  - serverless-webpack
+  - serverless-domain-manager
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  region: us-east-1
+  stage: dev
+  environment:
+    SERVICE_NAME: ${self:service}
+    BUCKET_NAME: maanaim_guarapari_files_bucket
+    DYNAMODB_TABLE: maanaim_guarapari_files
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+custom:
+  customDomain:
+    domainName: 'api.maanaimguarapari.com'
+    basePath: 'files'
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
+functions:
+  uploadRequestURL:
+    description: Generate an Upload URL to S3 and index the file in DynamoDB.
+    handler: methods/requestURL.handler
+    events:
+      - http:
+          path: /upload/requesturl
+          cors: true
+          method: POST
+
+  finishUpload:
+    description: Define the 'DONE' flag in uploadStatus attribute in DynamoDB.
+    handler: methods/finishUpload.handler
+    events:
+      - http:
+          path: /upload/finish/{id}
+          cors: true
+          method: POST
+
+  uploadRollback:
+    description: Rollback an Upload in DynamoDB.
+    handler: methods/rollbackUpload.handler
+    events:
+      - http:
+          path: /upload/rollback/{id}
+          cors: true
+          method: POST
+
+  find:
+    description: Return the index of an file in DynamoDB.
+    handler: methods/find.handler
+    events:
+      - http:
+          path: /get/{id}
+          cors: true
+          method: GET
+
+  list:
+    description: Return all indexes in DynamoDB.
+    handler: methods/list.handler
+    events:
+      - http:
+          path: /list
+          cors: true
+          method: GET
+
+resources:
+  Resources:
+    FilesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.BUCKET_NAME}
+        AccessControl: Private
+        CorsConfiguration:
+          CorsRules:
+          - AllowedMethods:
+            - GET
+            - PUT
+            - POST
+            - HEAD
+            AllowedOrigins:
+            - "*"
+            AllowedHeaders:
+            - "*"
+    FilesDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
