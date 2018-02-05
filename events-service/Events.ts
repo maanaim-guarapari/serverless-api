@@ -15,6 +15,7 @@ export class Events extends AbstractController {
     if(obj != null && obj.title && obj.location && obj.group && obj.time){
 
       var event = {
+        img: obj.img,
         group: obj.group,
         location: obj.location,
         title: obj.title,
