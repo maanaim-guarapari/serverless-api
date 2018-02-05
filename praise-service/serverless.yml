@@ -29,7 +29,7 @@ provider:
 
 custom:
   customDomain:
-    domainName: 'api.maanaimguarapari.com'
+    domainName: 'api.maanaimguarapari.gustavoamorim.xyz'
     basePath: 'praises'
     stage: ${self:provider.stage}
     createRoute53Record: true
