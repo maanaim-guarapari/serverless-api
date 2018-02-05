@@ -12,20 +12,15 @@ export class Events extends AbstractController {
 
     var obj = JSON.parse(request.body);
 
-    if(obj != null && obj.title && obj.location && obj.group && obj.time){
+    if(obj != null && obj.type && obj.name && obj.number){
 
       var event = {
-        img: obj.img,
-        group: obj.group,
-        location: obj.location,
-        title: obj.title,
-        time:  obj.time,
-        description: obj.description,
-        versicle: obj.versicle,
-        aditional: {
-          subscriptionLink: obj.aditional.subscriptionLink,
-          filesLink: obj.aditional.filesLink
-        }
+        type: obj.type,
+        name: obj.name,
+        number: obj.number,
+        lyrics: obj.lyrics,
+        song: obj.song,
+        aditionalFiles: obj.aditionalFiles
       }
 
       this.dbDriver.create(event, (error, data) => {
