@@ -3,6 +3,7 @@ service:
 
 plugins:
   - serverless-webpack
+  - serverless-domain-manager
 
 provider:
   name: aws
@@ -26,13 +27,20 @@ provider:
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
+custom:
+  customDomain:
+    domainName: 'api.maanaimguarapari.com'
+    basePath: 'events'
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
 functions:
   create:
     handler: methods/create.create
     events:
       - http: &httpEventMethod
           method: POST
-          path: events/create
+          path: create
           cors: true
           #authorizer: aws_iam
   delete:
@@ -41,21 +49,21 @@ functions:
       - http:
           <<: *httpEventMethod
           method: DELETE
-          path: events/delete/{id}
+          path: delete/{id}
   list:
     handler: methods/list.list
     events:
       - http:
           <<: *httpEventMethod
           method: GET
-          path: events/list
+          path: list
   get:
     handler: methods/get.get
     events:
       - http:
           <<: *httpEventMethod
           method: GET
-          path: events/get/{id}
+          path: get/{id}
 
 resources:
   Resources:
