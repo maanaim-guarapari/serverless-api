@@ -27,8 +27,8 @@ export class DynamoDriver extends AbstractDriver {
     };
 
     item.Item.id = uuid.v4();
-    item.Item.created_at = Date.now();
-    item.Item.updated_at = Date.now();
+    item.Item.created_at = Math.floor(Date.now() / 1000);
+    item.Item.updated_at = Math.floor(Date.now() / 1000);
 
     this.db.put(item, callback);
   }
