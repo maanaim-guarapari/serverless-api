@@ -1,7 +1,7 @@
 import { AbstractController } from './interfaces/AbstractController';
 import { DynamoDriver } from './interfaces/DynamoDriver';
 
-export class Events extends AbstractController {
+export class Praises extends AbstractController {
 
   constructor(){
     super(process.env.DYNAMODB_TABLE,
