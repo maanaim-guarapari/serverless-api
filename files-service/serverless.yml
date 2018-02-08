@@ -12,7 +12,7 @@ provider:
   stage: dev
   environment:
     SERVICE_NAME: ${self:service}
-    BUCKET_NAME: maanaim_guarapari_files_bucket
+    BUCKET_NAME: maanaim-guarapari-files-bucket
     DYNAMODB_TABLE: maanaim_guarapari_files
   iamRoleStatements:
     - Effect: "Allow"
@@ -72,6 +72,15 @@ functions:
           path: /get/{id}
           cors: true
           method: GET
+
+  findMultiple:
+    description: Return all the file index of a list of hash keys received.
+    handler: methods/findMultiple.handler
+    events:
+      - http:
+          path: /get
+          cors: true
+          method: POST
 
   list:
     description: Return all indexes in DynamoDB.

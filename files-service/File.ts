@@ -19,6 +19,7 @@ export class File extends AbstractController {
       Key:  fileName,
       ContentType: fileMIME,
       ACL: 'public-read',
+      Expires: 3600
     };
 
     return s3.getSignedUrl('putObject', s3Params);
@@ -136,6 +137,39 @@ export class File extends AbstractController {
           }, callback);
         }
       });
+    }
+    else{
+      this.defaultInvalidDataResponse(callback);
+    }
+  }
+
+  public findMultiple(request, callback){
+
+    var results = [ ];
+    var loadCounter = 0;
+    var ids = JSON.parse(request.body);
+
+    if(ids && ids.length > 0){
+      for(let id in ids) {
+        this.getFile(ids[id], (error, data) => {
+          loadCounter++;
+          if(data.Item){
+            results.push(data.Item);
+            if(loadCounter == ids.length) {
+              this.defaultResponse(error, results, callback);
+            }
+          }
+          else{
+            results.push({
+              "id": id,
+              "message": "Item not found."
+            });
+            if(loadCounter == ids.length) {
+              this.defaultResponse(null, results, callback);
+            }
+          }
+        });
+      }
     }
     else{
       this.defaultInvalidDataResponse(callback);
