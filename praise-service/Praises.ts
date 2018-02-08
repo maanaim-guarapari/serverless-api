@@ -12,19 +12,21 @@ export class Praises extends AbstractController {
 
     var obj = JSON.parse(request.body);
 
-    if(obj != null && obj.type && obj.name && obj.number){
+    if(obj != null && obj.type && obj.name && obj.number && obj.song){
 
-      var event = {
+      var praise = {
         type: obj.type,
         name: obj.name,
         number: obj.number,
-        lyrics: obj.lyrics,
         song: obj.song,
-        aditionalFiles: obj.aditionalFiles
       }
 
-      this.dbDriver.create(event, (error, data) => {
-        this.defaultResponse(error, event, callback);
+      if(obj.type) praise['category'] = obj.category
+      if(obj.lyrics) praise['lyrics'] = obj.lyrics
+      if(obj.aditionalFiles) praise['aditionalFiles'] = obj.aditionalFiles
+
+      this.dbDriver.create(praise, (error, data) => {
+        this.defaultResponse(error, praise, callback);
       });
     }
     else{
