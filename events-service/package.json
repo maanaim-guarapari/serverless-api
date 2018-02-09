@@ -4,9 +4,8 @@
   "description": "Events Service API of Maanaim Guarapari Platform",
   "main": "webpack.config.js",
   "dependencies": {
-    "aws-sdk": "^2.125.0",
-    "serverless-domain-manager": "^2.2.2",
-    "uuid": "^3.1.0"
+    "serverless-utils": "^0.2.0",
+    "serverless-domain-manager": "^2.2.2"
   },
   "devDependencies": {
     "@types/node": "^8.0.31",
