@@ -1,5 +1,4 @@
-import { AbstractController } from './interfaces/AbstractController';
-import { DynamoDriver } from './interfaces/DynamoDriver';
+import { AbstractController, DynamoDriver } from 'serverless-utils';
 
 export class Praises extends AbstractController {
 
@@ -47,7 +46,7 @@ export class Praises extends AbstractController {
 
   public find(request, callback){
     if(request.pathParameters != null && request.pathParameters.id != null){
-      this.dbDriver.find(request.pathParameters.id, null, (error, data) => {
+      this.findOneInDB(request.pathParameters.id, (error, data) => {
         if(!data) data = { "Item": [] };
         this.defaultResponse(error, data.Item, callback);
       });
