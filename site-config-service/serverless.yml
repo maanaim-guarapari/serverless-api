@@ -33,7 +33,7 @@ custom:
     basePath: 'config'
     stage: ${self:provider.stage}
     createRoute53Record: true
-    certificateName: '*.maanaimguarapari.gustavoamorim.xyz'
+    certificateName: 'maanaimguarapari.gustavoamorim.xyz'
 
 functions:
   setConfigValue:
