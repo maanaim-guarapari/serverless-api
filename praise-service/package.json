@@ -4,7 +4,7 @@
   "description": "Events Service API of Maanaim Guarapari Platform",
   "main": "webpack.config.js",
   "dependencies": {
-    "serverless-utils": "^0.2.0",
+    "serverless-utils": "^0.2.1",
     "serverless-domain-manager": "^2.2.2"
   },
   "devDependencies": {

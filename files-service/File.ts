@@ -122,7 +122,7 @@ export class File extends AbstractController {
     }
   }
 
-  public find(request, callback){
+  public get(request, callback){
 
     var id = this.getRequestParam(request, 'id');
 
@@ -143,7 +143,7 @@ export class File extends AbstractController {
     }
   }
 
-  public findMultiple(request, callback){
+  public getMultiple(request, callback){
 
     var results = [ ];
     var loadCounter = 0;
@@ -176,7 +176,7 @@ export class File extends AbstractController {
     }
   }
 
-  public fetchAll(request, callback){
+  public fetch(request, callback){
     this.dbDriver.all(null, (error, data) => {
       var response = {
         itemsRetourned: data.Items.length,

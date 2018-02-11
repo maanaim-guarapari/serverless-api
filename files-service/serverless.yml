@@ -65,30 +65,30 @@ functions:
           cors: true
           method: POST
 
-  find:
+  get:
     description: Return the index of an file in DynamoDB.
-    handler: methods/find.handler
+    handler: methods/get.handler
     events:
       - http:
-          path: /get/{id}
+          path: /{id}
           cors: true
           method: GET
 
-  findMultiple:
+  getMultiple:
     description: Return all the file index of a list of hash keys received.
-    handler: methods/findMultiple.handler
+    handler: methods/getMultiple.handler
     events:
       - http:
-          path: /get
+          path: /
           cors: true
           method: POST
 
-  list:
+  fetch:
     description: Return all indexes in DynamoDB.
-    handler: methods/list.handler
+    handler: methods/fetch.handler
     events:
       - http:
-          path: /list
+          path: /
           cors: true
           method: GET
 

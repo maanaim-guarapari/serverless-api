@@ -3,5 +3,5 @@ import { File } from '../File';
 
 export const handler = (event, context, cb) => {
   const file = new File();
-  file.fetchAll(event, cb);
+  file.getMultiple(event, cb);
 }

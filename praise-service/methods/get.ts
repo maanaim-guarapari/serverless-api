@@ -1,6 +1,6 @@
 import { Praises } from '../Praises';
 
-export const get = (event, context, cb) => {
+export const handler = (event, context, cb) => {
   const praises = new Praises();
-  praises.find(event, cb);
+  praises.get(event, cb);
 }

@@ -33,7 +33,7 @@ export class Praises extends AbstractController {
     }
   }
 
-  public fetchAll(request, callback){
+  public fetch(request, callback){
     this.dbDriver.all(null, (error, data) => {
       // if(!data) data = { "Items": [] };
       var response = {
@@ -44,7 +44,7 @@ export class Praises extends AbstractController {
     });
   }
 
-  public find(request, callback){
+  public get(request, callback){
     if(request.pathParameters != null && request.pathParameters.id != null){
       this.findOneInDB(request.pathParameters.id, (error, data) => {
         if(!data) data = { "Item": [] };

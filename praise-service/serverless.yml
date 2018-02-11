@@ -37,34 +37,37 @@ custom:
 
 functions:
   create:
-    handler: methods/create.create
+    handler: methods/create.handler
     events:
       - http: &httpEventMethod
           method: POST
-          path: create
+          path: /
           cors: true
           #authorizer: aws_iam
+
   delete:
-    handler: methods/delete.deleteMessage
+    handler: methods/delete.handler
     events:
       - http:
           <<: *httpEventMethod
           method: DELETE
-          path: delete/{id}
-  list:
-    handler: methods/list.list
-    events:
-      - http:
-          <<: *httpEventMethod
-          method: GET
-          path: list
+          path: /{id}
+
   get:
-    handler: methods/get.get
+    handler: methods/get.handler
     events:
       - http:
           <<: *httpEventMethod
           method: GET
-          path: get/{id}
+          path: /{id}
+
+  fetch:
+    handler: methods/fetch.handler
+    events:
+      - http:
+          <<: *httpEventMethod
+          method: GET
+          path: /
 
 resources:
   Resources:

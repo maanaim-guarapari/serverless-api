@@ -4,7 +4,7 @@ export class Config extends AbstractController {
 
   constructor(){
     super(process.env.DYNAMODB_TABLE,
-          new DynamoDriver(process.env.DYNAMODB_TABLE));
+          new DynamoDriver(process.env.DYNAMODB_TABLE, 'key'));
   }
 
   public create(obj, callback){
@@ -49,7 +49,7 @@ export class Config extends AbstractController {
     });
   }
 
-  public setConfigValue(request, callback){
+  public set(request, callback){
 
     var obj = JSON.parse(request.body);
 
@@ -63,9 +63,8 @@ export class Config extends AbstractController {
     });
   }
 
-  public fetchConfigValues(request, callback){
+  public fetch(request, callback){
     this.dbDriver.all(null, (error, data) => {
-      // if(!data) data = { "Items": [] };
       var response = {
         itemsRetourned: data.Items.length,
         data: data.Items
@@ -74,9 +73,12 @@ export class Config extends AbstractController {
     });
   }
 
-  public getConfigValue(request, callback){
+  public get(request, callback){
     if(request.pathParameters && request.pathParameters.key){
       this.findOneInDB(request.pathParameters.key, (error, data) => {
+        console.log("\"" + request.pathParameters.key + "\"");
+        console.log(JSON.stringify(data));
+        console.log(JSON.stringify(error));
         if(data && data.Item){
           this.defaultResponse(error, data.Item, callback);
         }

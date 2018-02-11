@@ -36,29 +36,31 @@ custom:
     certificateName: 'maanaimguarapari.gustavoamorim.xyz'
 
 functions:
-  setConfigValue:
-    handler: methods/setConfigValue.handler
+  set:
+    handler: methods/set.handler
     events:
       - http: &httpEventMethod
           method: POST
-          path: set
+          path: /
           cors: true
           #authorizer: aws_iam
-  getConfigValue:
-    handler: methods/getConfigValue.handler
-    events:
-      - http:
-          <<: *httpEventMethod
-          method: GET
-          path: get/{key}
 
-  fetchConfigValues:
-    handler: methods/fetchConfigValues.handler
+  get:
+    handler: methods/get.handler
     events:
       - http:
           <<: *httpEventMethod
           method: GET
-          path: get
+          path: /{key}
+
+  fetch:
+    handler: methods/fetch.handler
+    events:
+      - http:
+          <<: *httpEventMethod
+          method: GET
+          path: /
+
 resources:
   Resources:
     # DynamoDB Table
