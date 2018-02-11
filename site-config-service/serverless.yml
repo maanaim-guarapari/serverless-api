@@ -68,11 +68,11 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: id
+            AttributeName: key
             AttributeType: S
         KeySchema:
           -
-            AttributeName: id
+            AttributeName: key
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
