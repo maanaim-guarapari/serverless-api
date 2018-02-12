@@ -1,6 +1,5 @@
 
-import { DynamoDriver } from './interfaces/DynamoDriver';
-import { AbstractController } from './interfaces/AbstractController';
+import { AbstractController, DynamoDriver } from 'serverless-utils';
 
 import S3 = require('aws-sdk/clients/s3');
 
@@ -23,10 +22,6 @@ export class File extends AbstractController {
     };
 
     return s3.getSignedUrl('putObject', s3Params);
-  }
-
-  private getFile(id, callback){
-    this.dbDriver.find(id, null, callback);
   }
 
   public requestURL(request, callback){
@@ -65,7 +60,7 @@ export class File extends AbstractController {
     var id = this.getRequestParam(request, 'id');
 
     if(id){
-      this.getFile(id, (error, data) => {
+      this.findOneInDB(id, (error, data) => {
         if(data.Item && data.Item.uploadStatus == 'TODO'){
           var item = {
             TableName: process.env.DYNAMODB_TABLE,
@@ -109,7 +104,7 @@ export class File extends AbstractController {
     var id = this.getRequestParam(request, 'id');
 
     if(id){
-      this.getFile(id, (error, data) => {
+      this.findOneInDB(id, (error, data) => {
         if(data.Item && data.Item.uploadStatus == 'TODO'){
           this.dbDriver.delete(id, (error, data) => {
             this.defaultResponse(error, data, callback);
@@ -127,7 +122,7 @@ export class File extends AbstractController {
     var id = this.getRequestParam(request, 'id');
 
     if(id){
-      this.getFile(id, (error, data) => {
+      this.findOneInDB(id, (error, data) => {
         if(data.Item){
           this.defaultResponse(error, data.Item, callback);
         }
@@ -144,29 +139,35 @@ export class File extends AbstractController {
   }
 
   public getMultiple(request, callback){
-
-    var results = [ ];
-    var loadCounter = 0;
+    var encountered = 0;
     var ids = JSON.parse(request.body);
+
+    var response = {
+      itemsRetourned: 0,
+      itemsEncountered: 0,
+      data: []
+    };
 
     if(ids && ids.length > 0){
       for(let id in ids) {
-        this.getFile(ids[id], (error, data) => {
-          loadCounter++;
-          if(data.Item){
-            results.push(data.Item);
-            if(loadCounter == ids.length) {
-              this.defaultResponse(error, results, callback);
-            }
+        this.findOneInDB(ids[id], (error, data) => {
+          if(data && data.Item){
+            encountered++;
+            response.data.push(data.Item);
           }
           else{
-            results.push({
+            response.data.push({
               "id": id,
               "message": "Item not found."
             });
-            if(loadCounter == ids.length) {
-              this.defaultResponse(null, results, callback);
-            }
+          }
+          /* response scoped into findOneInDB it's different of getMultiple
+           * scope
+           */
+          if(response.data.length === ids.length) {
+            response.itemsEncountered = encountered;
+            response.itemsRetourned = response.data.length;
+            this.defaultResponse(null, response, callback);
           }
         });
       }
