@@ -61,6 +61,14 @@ functions:
           method: GET
           path: /{id}
 
+  getMultiple:
+    handler: methods/getMultiple.handler
+    events:
+      - http:
+          <<: *httpEventMethod
+          method: POST
+          path: /
+
   fetch:
     handler: methods/fetch.handler
     events:

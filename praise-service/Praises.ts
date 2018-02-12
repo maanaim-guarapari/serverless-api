@@ -56,6 +56,45 @@ export class Praises extends AbstractController {
     }
   }
 
+  public getMultiple(request, callback){
+    var encountered = 0;
+    var ids = JSON.parse(request.body);
+
+    var response = {
+      itemsRetourned: 0,
+      itemsEncountered: 0,
+      data: []
+    };
+
+    if(ids && ids.length > 0){
+      for(let id in ids) {
+        this.findOneInDB(ids[id], (error, data) => {
+          if(data && data.Item){
+            encountered++;
+            response.data.push(data.Item);
+          }
+          else{
+            response.data.push({
+              "id": id,
+              "message": "Item not found."
+            });
+          }
+          /* response scoped into findOneInDB it's different of getMultiple
+           * scope
+           */
+          if(response.data.length === ids.length) {
+            response.itemsEncountered = encountered;
+            response.itemsRetourned = response.data.length;
+            this.defaultResponse(null, response, callback);
+          }
+        });
+      }
+    }
+    else{
+      this.defaultInvalidDataResponse(callback);
+    }
+  }
+
   public delete(request, callback){
     if(request.pathParameters != null && request.pathParameters.id != null){
       this.dbDriver.delete(request.pathParameters.id, (error, data) => {
