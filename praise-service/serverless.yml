@@ -61,13 +61,13 @@ functions:
           method: GET
           path: /{id}
 
-  getMultiple:
+  getSome:
     handler: methods/getMultiple.handler
     events:
       - http:
           <<: *httpEventMethod
           method: POST
-          path: /
+          path: /get-some
 
   fetch:
     handler: methods/fetch.handler
