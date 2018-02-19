@@ -20,6 +20,7 @@ export class Praises extends AbstractController {
         song: obj.song,
       }
 
+      if(obj.author) praise['author'] = obj.author
       if(obj.type) praise['category'] = obj.category
       if(obj.lyrics) praise['lyrics'] = obj.lyrics
       if(obj.aditionalFiles) praise['aditionalFiles'] = obj.aditionalFiles
