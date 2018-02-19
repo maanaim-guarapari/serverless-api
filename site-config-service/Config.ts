@@ -9,11 +9,11 @@ export class Config extends AbstractController {
 
   public create(obj, callback){
 
-    if(obj != null && obj.key && obj.value){
+    if(obj != null && obj.key && obj.config){
 
       var praise = {
         key: obj.key,
-        value: obj.value,
+        config: obj.config,
       }
 
       this.dbDriver.create(praise, (error, data) => {
@@ -32,10 +32,10 @@ export class Config extends AbstractController {
           'key': obj.key
       },
       ExpressionAttributeValues: {
-          ':value': obj.value,
+          ':config': obj.config,
           ':updated_at': Date.now(),
       },
-      UpdateExpression: 'SET uploadStatus = :uploadStatus, updated_at = :updated_at',
+      UpdateExpression: 'SET config = :config, updated_at = :updated_at',
       ReturnValues: 'ALL_NEW',
     };
 
